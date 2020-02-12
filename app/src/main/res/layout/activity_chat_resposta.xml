@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="60dp"
+                    android:paddingBottom="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:layout_alignParentStart="true"
+                        android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+
+                    <TextView
+                        android:id="@+id/text_view_chat_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/avatar"
+                        android:layout_marginStart="15dp"
+                        android:layout_toEndOf="@+id/avatar"
+                        android:paddingBottom="8dp"
+                        android:text="Desconhecido" />
+
+                    <TextView
+                        android:id="@+id/text_view_chat_pergunta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_view_chat_name"
+                        android:layout_alignStart="@+id/text_view_chat_name"
+                        android:background="@drawable/bg_chat_pergunta"
+                        android:elevation="2dp"
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="12dp"
+                        tools:text="How are you doing? This is a long message that should probably wrap. Adojiasdjo asdnasiojdioa asidjasidj sdfgdfgpdf apsiksdof asdioajsf sdfosdnfo asdioajf sdfjsdof aqwpier. asidjaojda asoidjasidjoasid asdiojasidojasodia sodasjdiasdjoi asodiasjdo"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/text_view_chat_timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text_view_chat_pergunta"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toEndOf="@+id/avatar"
+                        android:paddingBottom="8dp"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_layout_chat_resposta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="60dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="10dp"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/text_view_chat_resposta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/bg_chat_resposta"
+                        android:elevation="2dp"
+                        android:padding="10dp"
+                        android:text="Placeholder message asuioasd asiodjaisd fgldfgk asjsdfsd asdfiopjsdifj."
+                        android:textColor="#FFFFFF"
+                        android:textSize="18dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_fazer_perguntas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:paddingStart="15dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:scrollbars="vertical"
+                android:theme="@style/TextLabel"
+                app:hintEnabled="false">
+
+                <EditText
+                    android:id="@+id/edit_text_pergunta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/black"
+                    android:hint="Escreva sua pergunta"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLines="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/imageButton_send_pergunta"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_image_button_primary_color_1"
+                app:srcCompat="@drawable/ic_send_grey_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_anuncio_desativado_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <TextView
+                android:id="@+id/textView_anuncio_excluido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_error_red_40dp"
+                android:drawablePadding="10dp"
+                android:padding="4dp"
+                android:paddingStart="10dp"
+                android:text="O anúncio à qual esta pergunta pertence foi excluído pelo anunciante."
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_mensagem_sistema"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_error_red_40dp"
+                android:drawablePadding="10dp"
+                android:padding="4dp"
+                android:paddingStart="10dp"
+                android:text="Mensagem do sistema."
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar_categorias_fragment"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:indeterminateTint="@color/colorPrimary"
+        android:visibility="invisible" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

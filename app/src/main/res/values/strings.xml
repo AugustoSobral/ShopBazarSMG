@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Livre Mercado Diamantina</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+
+
+    <string name="slide_frase1">Encontre produtos e serviços anunciados por pessoas perto de você</string>
+    <string name="slide_frase2">Anuncie produtos novos ou usados gratuitamente</string>
+    <string name="slide_frase3">Anuncie serviços prestados por você para alcançar mais clientes</string>
+    <string name="slide_frase4">Basta fotografar as coisas que você comprou e não usou, ou não usa mais e criar seu anúncio</string>
+
+    <string name="facebook_app_id">666619187180658</string>
+    <string name="fb_login_protocol_scheme">fb666619187180658</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

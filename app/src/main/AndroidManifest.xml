@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sobralapps.android.shop_bazarsmg">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo_letras_maiores_circular"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logo_letras_maiores_circular"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".FragmentsNavMenu.PoliticaPrivacidadeActivity"
+            android:parentActivityName=".HomeActivity"/>
+        <activity
+            android:name=".FragmentsNavMenu.AnuncioDetails.ChatRespostaActivity"
+            android:parentActivityName=".HomeActivity" />
+        <activity android:name=".FragmentsNavMenu.AnuncioDetails.PerguntasActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.EditAnuncioActivities.AnuncioDetailsActivity"
+            android:parentActivityName=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditOptionsActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditImagesActivity"
+            android:parentActivityName=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditOptionsActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditPriceActivity"
+            android:parentActivityName=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditOptionsActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditDescriptionActivity"
+            android:parentActivityName=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditOptionsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
+            android:name=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditTitleActivity"
+            android:parentActivityName=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditOptionsActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.EditAnuncioActivities.AnuncioEditOptionsActivity"
+            android:parentActivityName=".HomeActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.SecurityActivities.ChangeCelNumberActivity"
+            android:parentActivityName=".FragmentsNavMenu.SecurityActivities.ConfirmCelActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.SecurityActivities.ConfirmCelActivity"
+            android:parentActivityName=".FragmentsNavMenu.SecurityActivities.SecurityActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.SecurityActivities.PasswordResetEmail"
+            android:parentActivityName=".FragmentsNavMenu.SecurityActivities.ConfirmPasswordActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.SecurityActivities.ChangePasswordActivity"
+            android:parentActivityName=".FragmentsNavMenu.SecurityActivities.ConfirmPasswordActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.SecurityActivities.ConfirmPasswordActivity"
+            android:parentActivityName=".FragmentsNavMenu.SecurityActivities.SecurityActivity" />
+        <activity
+            android:name=".FragmentsNavMenu.SecurityActivities.SecurityActivity"
+            android:parentActivityName=".HomeActivity" />
+        <activity
+            android:name=".Start_Login_Register.CompleteProfileForPhoneLoginActivity"
+            android:parentActivityName=".Start_Login_Register.LoginActivity" />
+        <activity
+            android:name=".Start_Login_Register.LoginRegisterForAnonimousUser"
+            android:parentActivityName=".HomeActivity" />
+        <activity
+            android:name=".Start_Login_Register.LoginWithFacebook"
+            android:parentActivityName=".Start_Login_Register.LoginActivity" />
+        <activity
+            android:name=".Sell.DadosParaContatoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Sell.PriceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Sell.PriceActivity"
+            android:parentActivityName=".Sell.NovoUsadoActivity" />
+        <activity
+            android:name=".Sell.NovoUsadoActivity"
+            android:parentActivityName=".Sell.AnuncioCategoryActivity" />
+        <activity
+            android:name=".Sell.AnuncioCategoryActivity"
+            android:parentActivityName=".Sell.AnuncioDescriptionActivity" />
+        <activity
+            android:name=".Sell.AnuncioDescriptionActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Sell.AnuncioTitleActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
+            android:name=".Sell.AnuncioTitleActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Sell.ImagesChosenActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
+        <activity
+            android:name=".Sell.ImageCropperActivity"
+            android:parentActivityName=".Sell.ImagesChosenActivity" />
+        <activity
+            android:name=".Sell.ImagesChosenActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Sell.SellOptionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Sell.SellOptionsActivity"
+            android:parentActivityName=".HomeActivity" />
+        <activity
+            android:name=".Start_Login_Register.RegisterEmailActivity"
+            android:parentActivityName=".Start_Login_Register.RegisterOptionsActivity" />
+        <activity
+            android:name=".Start_Login_Register.RegisterOptionsActivity"
+            android:parentActivityName=".Start_Login_Register.StartActivity" />
+        <activity
+            android:name=".Start_Login_Register.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Start_Login_Register.StartActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".Start_Login_Register.StartActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2687105338472411~2487109491" />
+
+        <service
+            android:name=".MyMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

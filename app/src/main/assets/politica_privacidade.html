@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="profile" href="https://gmpg.org/xfn/11" />
+    <title>Política de Privacidade Livre Mercado Diamantina</title>
+
+    <!-- Async WordPress.com Remote Login -->
+    <script id="wpcom_remote_login_js">
+var wpcom_remote_login_extra_auth = '';
+function wpcom_remote_login_remove_dom_node_id( element_id ) {
+	var dom_node = document.getElementById( element_id );
+	if ( dom_node ) { dom_node.remove(); }
+}
+function wpcom_remote_login_remove_dom_node_classes( class_name ) {
+	var dom_nodes = document.querySelectorAll( '.' + class_name );
+	for ( var i = 0; i < dom_nodes.length; i++ ) {
+		dom_nodes[i].remove();
+	}
+}
+function wpcom_remote_login_final_cleanup() {
+	wpcom_remote_login_remove_dom_node_classes( "wpcom_remote_login_msg" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_validate" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_js" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_iframe" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_styles" );
+}
+
+// Watch for messages back from the remote login
+window.addEventListener( "message", function( e ) {
+	if ( e.origin === "https://r-login.wordpress.com" ) {
+		var data = {};
+		try {
+			data = JSON.parse( e.data );
+		} catch( e ) {
+			wpcom_remote_login_final_cleanup();
+			return;
+		}
+
+		if ( data.msg === 'LOGIN' ) {
+			// Clean up the login check iframe
+			wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+
+			var id_regex = new RegExp( /^[0-9]+$/ );
+			var token_regex = new RegExp( /^.*|.*|.*$/ );
+			if (
+				token_regex.test( data.token )
+				&& id_regex.test( data.wpcomid )
+			) {
+				// We have everything we need to ask for a login
+				var script = document.createElement( "script" );
+				script.setAttribute( "id", "wpcom_remote_login_validate" );
+				script.src = '/remote-login.php?wpcom_remote_login=validate'
+					+ '&wpcomid=' + data.wpcomid
+					+ '&token=' + encodeURIComponent( data.token )
+					+ '&host=' + window.location.protocol
+						+ '//' + window.location.hostname;
+				document.body.appendChild( script );
+			}
+
+			return;
+		}
+
+		// Safari ITP, not logged in, so redirect
+		if ( data.msg === 'LOGIN-REDIRECT' ) {
+			window.location = 'https://wordpress.com/log-in?redirect_to=' + window.location.href;
+			return;
+		}
+
+		// Safari ITP, storage access failed, remove the request
+		if ( data.msg === 'LOGIN-REMOVE' ) {
+			var css_zap = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } @media screen and ( max-width: 782px ) { html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } }';
+			var style_zap = document.createElement( 'style' );
+			style_zap.type = 'text/css';
+			style_zap.appendChild( document.createTextNode( css_zap ) );
+			document.body.appendChild( style_zap );
+
+			var e = document.getElementById( 'wpcom_request_access_iframe' );
+			e.parentNode.removeChild( e );
+
+			document.cookie = 'wordpress_com_login_access=denied; path=/; max-age=31536000';
+
+			return;
+		}
+
+		// Safari ITP
+		if ( data.msg === 'REQUEST_ACCESS' ) {
+			console.log( 'request access: safari' );
+
+			// Check ITP iframe enable/disable knob
+			if ( wpcom_remote_login_extra_auth !== 'safari_itp_iframe' ) {
+				return;
+			}
+
+			// If we are in a "private window" there is no ITP.
+			var private_window = false;
+			try {
+				var opendb = window.openDatabase( null, null, null, null );
+			} catch( e ) {
+				private_window = true;
+			}
+
+			if ( private_window ) {
+				console.log( 'private window' );
+				return;
+			}
+
+			var iframe = document.createElement( 'iframe' );
+			iframe.id = 'wpcom_request_access_iframe';
+			iframe.setAttribute( 'scrolling', 'no' );
+			iframe.setAttribute( 'sandbox', 'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-top-navigation-by-user-activation' );
+			iframe.src = 'https://r-login.wordpress.com/remote-login.php?wpcom_remote_login=request_access&origin=' + encodeURIComponent( data.origin ) + '&wpcomid=' + encodeURIComponent( data.wpcomid );
+
+			var css = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 46px !important; } * html body { margin-top: 46px !important; } @media screen and ( max-width: 660px ) { html { margin-top: 71px !important; } * html body { margin-top: 71px !important; } #wpcom_request_access_iframe { display: block; height: 71px !important; } } #wpcom_request_access_iframe { border: 0px; height: 46px; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; z-index: 99999; background: #23282d; } ';
+
+			var style = document.createElement( 'style' );
+			style.type = 'text/css';
+			style.id = 'wpcom_request_access_styles';
+			style.appendChild( document.createTextNode( css ) );
+			document.body.appendChild( style );
+
+			document.body.appendChild( iframe );
+		}
+
+		if ( data.msg === 'DONE' ) {
+			wpcom_remote_login_final_cleanup();
+		}
+	}
+}, false );
+
+// Inject the remote login iframe after the page has had a chance to load
+// more critical resources
+window.addEventListener( "DOMContentLoaded", function( e ) {
+	var iframe = document.createElement( "iframe" );
+	iframe.style.display = "none";
+	iframe.setAttribute( "scrolling", "no" );
+	iframe.setAttribute( "id", "wpcom_remote_login_key" );
+	iframe.src = "https://r-login.wordpress.com/remote-login.php"
+		+ "?wpcom_remote_login=key"
+		+ "&origin=aHR0cHM6Ly9wb2xpdGljYWRlcHJpdmFjaWRhZGUucG9saXRpY3MuYmxvZw%3D%3D"
+		+ "&wpcomid=170486792"
+		+ "&time=1578507252";
+	document.body.appendChild( iframe );
+}, false );
+</script>
+    <link rel='dns-prefetch' href='//s2.wp.com' />
+    <link rel='dns-prefetch' href='//s1.wp.com' />
+    <link rel='dns-prefetch' href='//politicadeprivacidadepolitics.wordpress.com' />
+    <link rel='dns-prefetch' href='//s0.wp.com' />
+    <link rel='dns-prefetch' href='//wordpress.com' />
+    <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+    <link rel="alternate" type="application/rss+xml" title="Feed para Política de Privacidade Livre Mercado Diamantina &raquo;" href="https://politicadeprivacidade.politics.blog/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Feed de comentários para Política de Privacidade Livre Mercado Diamantina &raquo;" href="https://politicadeprivacidade.politics.blog/comments/feed/" />
+    <script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+    <script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s0.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1573557586h&ver=5.3.2"}};
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+    <style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+    <link rel='stylesheet' id='all-css-0-1' href='https://s2.wp.com/_static/??-eJylU0luwzAM/FBlxQWCOIeib5Fs1mWixRCpGP59taRpFjQN0othLjMcgUM5T6L3jsGxtFFMJo7oSM5T760giwaWq6jpiV7kGUwbP56AVoU9MLpRaBVkar3M3IDPZhrcA8kd8KT6vSjRTft37xhTqCGMqRJAbpq2WUkd0QxZToHroMIiiRcD/6fhT7CP0BTUzyPgkNpSe3Q8+Nk9rOaKxqjFRxZjwOFZiqDyCuhZOKMFgw7+wH9EYwQhg4ABy85rRa6atmtej1bxxFQHyAGJ5QFh/pWy90cpbaZYVURNNVVM2dfTkqoak1jPJV1n7/k2Wyfl7aQ4d9g0R4FJfnF8D1aPSuspAJFIX4vRimK0W99fjLOZuh5IubCLTIWidJ4xoen0kwvv9q1dbzbbdbftut0XR399nA==?cssminify=yes' type='text/css' media='all' />
+    <style id='wp-block-library-inline-css'>
+.has-text-align-justify {
+	text-align:justify;
+}
+</style>
+    <link rel='stylesheet' id='print-css-1-1' href='https://s1.wp.com/wp-content/themes/pub/varia/print.css?m=1571655471h&cssminify=yes' type='text/css' media='print' />
+    <link rel='stylesheet' id='all-css-2-1' href='https://s1.wp.com/_static/??-eJx9jUEOwjAMBD9EMBUqiAPiLW5qgiGJo8Yh6u8J4lJExc2rnVlDTcZKVIoKeqNAGVIZIOBcRUbIOnva2pw3sA4+cWIEjvaDmpqshB8hFJN8cRwzVB4daQYqrZUHk/FYQSkkj9pG1z8uBhyJ8WJRWeJXMFePPP1TJxq8uHY6aNQivqVLOHf98djtd4dTf38BOPBocg==?cssminify=yes' type='text/css' media='all' />
+    <link rel='stylesheet' id='maywood-fonts-css'  href='https://fonts.googleapis.com/css?family=IBM+Plex+Sans%3A300%2C300i%2C500%2C500i%2C700&#038;subset=latin%2Clatin-ext' media='all' />
+    <link rel='stylesheet' id='all-css-4-1' href='https://s1.wp.com/_static/??-eJx9kNsKgzAMhl9oNXNM1IuxZ0lrrd1qIyZFfPspKNsQvEoC338gMA3KUBQbBaSzvWUYkoYe54moAZY52MwwX+AH7JMaQnI+MqART1Hj+N0O+M62KQTFXqyyjRcf3eYC1yyvshu4QBoXYs3kJRrFG9AB4/uswUAsqg3oR+AOx8V2n2cqJuOXrECO/o+DaPtKd9/6rcCzf+RFWdZFVVfV6wNJ8HfC?cssminify=yes' type='text/css' media='all' />
+    <style id='jetpack-global-styles-frontend-style-inline-css'>
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+</style>
+    <script type='text/javascript' src='https://s2.wp.com/_static/??-eJyFztEKwjAMBdAfsisyOnwRv6XWOFKXtDbphn69HeiDMBQC9+EeuLFLNshhqhcQG9vdK5THO7ooO/sLGMKxeIWOkD84JFZgXW1OogQifoSNltIZJzBVoDTA2mauacN9v4Q8Iyx/WQTNPtxMAcHnun6i4965Q++GwfXxBTkPW9k='></script>
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://politicadeprivacidadepolitics.wordpress.com/xmlrpc.php?rsd" />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s1.wp.com/wp-includes/wlwmanifest.xml" />
+    <meta name="generator" content="WordPress.com" />
+    <link rel="canonical" href="https://politicadeprivacidade.politics.blog/" />
+    <link rel='shortlink' href='https://wp.me/PbxloY-6' />
+    <link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fpoliticadeprivacidade.politics.blog%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fpoliticadeprivacidade.politics.blog%2F&amp;for=wpcom-auto-discovery" />
+    <!-- Jetpack Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Política de Privacidade Livre Mercado Diamantina" />
+    <meta property="og:url" content="https://politicadeprivacidade.politics.blog/" />
+    <meta property="og:site_name" content="Política de Privacidade Livre Mercado Diamantina" />
+    <meta property="og:image" content="https://s0.wp.com/i/blank.jpg" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:site" content="@wordpressdotcom" />
+    <meta name="twitter:text:title" content="Política de privacidade" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:description" content="Visite o post para mais." />
+    <meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+
+    <!-- End Jetpack Open Graph Tags -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://s1.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48" />
+    <link rel="icon" type="image/x-icon" href="https://s1.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48" />
+    <link rel="apple-touch-icon-precomposed" href="https://s2.wp.com/i/webclip.png" />
+    <link rel="search" type="application/opensearchdescription+xml" href="https://politicadeprivacidade.politics.blog/osd.xml" title="Política de Privacidade Livre Mercado Diamantina" />
+    <link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com" />
+    <meta name="application-name" content="Política de Privacidade Livre Mercado Diamantina" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-task" content="name=Assinar;action-uri=https://politicadeprivacidade.politics.blog/feed/;icon-uri=https://s1.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Registre um blog gratuito;action-uri=http://wordpress.com/signup/;icon-uri=https://s1.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Suporte do WordPress.com;action-uri=http://support.wordpress.com/;icon-uri=https://s1.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Fóruns;action-uri=http://forums.wordpress.com/;icon-uri=https://s1.wp.com/i/favicon.ico" /><meta name="description" content="Política de Privacidade Livre Mercado Diamantina Data efetiva: 15 de Dezembro de 2019. Esta página informa sobre nossas políticas de coleta, uso e divulgação de dados pessoais quando você usa nosso Serviço e as opções que você associou a esses dados.Usamos seus dados para fornecer e melhorar o Serviço. Ao usar o Serviço, você concorda&hellip;" />
+</head>
+
+<body class="home page-template-default page page-id-6 wp-embed-responsive customizer-styles-applied singular image-filters-enabled hide-homepage-title admin-bar highlander-enabled highlander-light">
+
+
+<div id="page" class="site">
+    <a class="skip-link screen-reader-text" href="#content">Ir para conteúdo</a>
+
+
+    <header id="masthead" class="site-header responsive-max-width">
+
+        <div class="site-branding">
+
+            <p class="site-title"><a href="https://politicadeprivacidade.politics.blog/" rel="home">Política de Privacidade Livre Mercado Diamantina</a></p>
+
+        </div><!-- .site-branding -->
+
+
+
+    </header><!-- #masthead -->
+
+
+    <div id="content" class="site-content">
+
+        <section id="primary" class="content-area">
+            <main id="main" class="site-main">
+
+
+                <article id="post-6" class="post-6 page type-page status-publish hentry entry">
+
+                    <header class="entry-header responsive-max-width">
+
+                        <h1 class="entry-title">Política de privacidade</h1>
+                    </header>
+
+                    <div class="entry-content">
+
+                        <p class="has-text-align-justify has-large-font-size"><strong>Política de Privacidade Livre Mercado Diamantina</strong></p>
+
+
+
+                        <p class="has-text-align-justify has-small-font-size"><br>Data efetiva: 15 de Dezembro de 2019.</p>
+
+
+
+                        <p class="has-text-align-justify has-normal-font-size"><br>Esta página informa sobre nossas políticas de coleta, uso e divulgação de dados pessoais quando você usa nosso Serviço e as opções que você associou a esses dados.<br>Usamos seus dados para fornecer e melhorar o Serviço. Ao usar o Serviço, você concorda com a coleta e o uso de informações de acordo com esta política.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Coleta e uso de informações</strong><br>Coletamos vários tipos diferentes de informações para vários propósitos, a fim de fornecer e melhorar nosso Serviço para você.<br>Tipos de dados coletados<br><strong>Dados pessoais</strong><br>Ao usar nosso Serviço, podemos solicitar que você nos forneça certas informações de identificação pessoal, que podem ser usadas para entrar em contato ou identificá-lo.<br>Informações de identificação pessoal podem incluir:<br>• Endereço de e-mail<br>• Nome e sobrenome<br>• Número de telefone<br>• Cookies e dados de uso<br>O não fornecimento de determinados dados pessoais pode<br>tornar impossível para este aplicativo prestar os seus serviços.<br>O usuário assume a responsabilidade pelos dados pessoais de<br>terceiros publicados ou compartilhados por meio deste serviço (este<br>aplicativo) e confirma que tem o consentimento da parte terceira para<br>fornecer dados para o proprietário.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Modo e local de processamento dos dados</strong><br><strong>Método de processamento</strong><br>O controlador de dados processa os dados de usuários de forma<br>adequada e tomará as medidas de segurança adequadas para<br>impedir o acesso não autorizado, divulgação, alteração ou destruição<br>não autorizada dos dados.<br>O processamento de dados é realizado utilizando computadores<br>e /ou ferramentas de TI habilitadas, seguindo procedimentos<br>organizacionais e meios estritamente relacionados com os fins<br>indicados. Além do controlador de dados, em alguns casos, os dados<br>podem ser acessados por certos tipos de pessoas envolvidas com a<br>operação do aplicativo (administração, vendas, marketing,<br>administração legal do sistema) ou pessoas externas (como<br>fornecedores terceirizados de serviços técnicos, carteiros,<br>provedores de hospedagem, empresas de TI, agências de<br>comunicação) nomeadas, quando necessário, como processadores<br>de dados por parte do proprietário. A lista atualizada destas partes<br>pode ser solicitada a partir do controlador de dados a qualquer<br>momento.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Lugar</strong><br>Os dados são processados nas sedes de operação do<br>controlador de dados, e em quaisquer outros lugares onde as partes<br>envolvidas com o processamento estejam localizadas. Para mais<br>informações, por favor entre em contato com o controlador de dados.<br>Período de conservação<br>Os dados são mantidos pelo período necessário para prestar o<br>serviço solicitado pelo usuário, ou pelos fins descritos neste<br>documento, e o usuário pode solicitar ao controlador de dados para<br>que os suspendam ou os removam.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>O Uso dos dados coletados</strong><br>O Livre Mercado Diamantina usa os dados coletados para vários<br>propósitos:<br>• Para fornecer e manter o Serviço.<br>• Para notificá-lo sobre alterações em nosso Serviço.<br>• Para permitir que você participe de recursos interativos do nosso<br>Serviço quando você optar por fazê-lo.<br>• Para fornecer atendimento ao cliente e suporte.<br>• Fornecer análises ou informações valiosas para que possamos<br>melhorar o Serviço.<br>• Monitorar o uso do Serviço.<br>• Detectar, prevenir e solucionar problemas técnicos.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Informações adicionais sobre a coleta e processamento<br>de dados</strong><br><strong>Ação jurídica</strong><br>Os dados pessoais dos usuários podem ser utilizados para fins<br>jurídicos pelo controlador de dados em juízo ou nas etapas<br>conducentes à possível ação jurídica decorrente de uso indevido<br>deste serviço (este aplicativo) ou dos serviços relacionados.<br>O usuário declara estar ciente de que o controlador dos dados<br>poderá ser obrigado a revelar os dados pessoais mediante<br>solicitação das autoridades governamentais.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Informações adicionais sobre os dados pessoais do usuário</strong><br>Além das informações contidas nesta política de privacidade,<br>este aplicativo poderá fornecer ao usuário informações adicionais e<br>contextuais sobre os serviços específicos ou a coleta e<br>processamento de dados pessoais mediante solicitação.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>As informações não contidas nesta política</strong><br>Mais detalhes sobre a coleta ou processamento de dados<br>pessoais podem ser solicitados ao controlador de dados, a qualquer<br>momento. Favor ver as informações de contato no fim deste<br>documento.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Os direitos dos usuários</strong><br>Os usuários têm o direito de, a qualquer tempo, consultar o<br>controlador de dados para saber se os seus dados pessoais foram<br>armazenados e saber mais sobre o conteúdo e origem, verificar a sua<br>exatidão ou para pedir que sejam complementados, cancelados,<br>atualizados ou corrigidos, ou que sejam transformados em formato<br>anônimo ou bloquear quaisquer dados mantidos em violação da lei,<br>bem como se opor ao seu tratamento por quaisquer todas as razões<br>legítimas. Os pedidos devem ser enviados para o controlador de<br>dados usando a informação de contato fornecida anteriormente.<br>Este aplicativo não suporta pedidos de &#8220;Não me rastreie&#8221;.<br>Para determinar se qualquer um dos serviços de terceiros que<br>utiliza honram solicitações de &#8220;Não me rastreie&#8221;, por favor leia as<br>políticas de privacidade.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Mudanças nesta política de privacidade</strong><br>O controlador de dados se reserva o direito de fazer alterações<br>nesta política de privacidade a qualquer momento, mediante<br>comunicação aos seus usuários nesta página. É altamente<br>recomendável que esta página seja consultada várias vezes em<br>relação à última modificação descrita na parte inferior. Se o Usuário<br>não concorda com qualquer das alterações da política de<br>privacidade, o usuário deve cessar o uso deste serviço (este<br>aplicativo) e pode solicitar ao controlador de dados que apague os<br>dados pessoais dele. Salvo disposição em contrário, a atual política<br>de privacidade se aplica a todos os dados pessoais dos usuários que<br>o controlador de dados tiver.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Definições e referências jurídicas</strong><br>Dados pessoais (ou dados)<br>Quaisquer informações relativas a uma pessoa física, pessoa<br>jurídica, instituição ou associação, as quais sejam, ou possam ser<br>identificadas, mesmo que indiretamente, por referência a quaisquer<br>outras informações, incluindo um número de identificação pessoal.</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Dados de uso<br>As informações coletadas automaticamente a partir deste<br>serviço (ou serviços de terceiros contratados neste serviço (este<br>aplicativo), que podem incluir: os endereços IP ou nomes de domínio<br>dos computadores utilizados pelos usuários que utilizam este<br>aplicativo, os endereços URI (Identificador Uniforme de Recurso), a<br>data e hora do pedido, o método utilizado para submeter o pedido ao<br>servidor, o tamanho do arquivo recebido em resposta, o código<br>numérico que indica o status do servidor de resposta (resultado<br>positivo, erro , etc.), o país de origem, as características do<br>navegador e do sistema operacional utilizado pelo usuário, os vários<br>detalhes de tempo por visita (por exemplo, o tempo gasto em cada<br>página dentro do aplicativo) e os detalhes sobre o caminho seguido<br>dentro da aplicação, com especial referência à sequência de páginas<br>visitadas e outros parâmetros sobre o sistema operacional do<br>dispositivo e/ou ambiente de TI do Usuário.</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Usuário<br>A pessoa que usa este aplicativo que deverá coincidir com ou<br>estar autorizada pelo titular dos dados a quem os dados pessoais se<br>referem.</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Titular dos dados<br>A pessoa jurídica ou física a quem os dados pessoais se<br>referem.</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Processador de dados (ou supervisor de dados)<br>A pessoa física, pessoa jurídica, a administração pública ou<br>qualquer outro órgão, associação ou organização autorizada pelo<br>controlador de dados para o processamento dos dados pessoais em<br>conformidade com esta política de privacidade.</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Controlador de dados (ou proprietário)<br>A pessoa física, pessoa jurídica, administração pública ou<br>qualquer outra entidade, associação ou organização com direitos,<br>também em conjunto com outro controlador dos dados, para tomar<br>decisões sobre as finalidades e os métodos de processamento de<br>dados pessoais e os meios utilizados, incluindo medidas de<br>segurança relativas ao funcionamento e ao uso deste serviço. O<br>controlador de dados, a menos que seja especificado de outra forma,<br>é o proprietário deste serviço (este aplicativo).</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Este aplicativo<br>A ferramenta de hardware ou software pela qual os dados<br>pessoais do usuário são coletados.</p>
+
+
+
+                        <p class="has-text-align-justify"><br>Cookie<br>Pequenas unidades de dados armazenados no dispositivo do<br>usuário.</p>
+
+
+
+                        <p class="has-text-align-justify"><br><strong>Entre em contato conosco</strong><br>Se você tiver alguma dúvida sobre esta Política de Privacidade,<br>entre em contato conosco:<br>• Por email: sobralapps@gmail.com</p>
+
+
+
+                        <p>Última atualização: 15 de dezembro de 2019</p>
+
+
+
+                        <p></p>
+                    </div><!-- .entry-content -->
+
+                </article><!-- #post-6 -->
+
+            </main><!-- #main -->
+        </section><!-- #primary -->
+
+
+    </div><!-- #content -->
+
+    <footer id="colophon" class="site-footer responsive-max-width">
+
+        <div class="site-info">
+            <a class="site-name" href="https://politicadeprivacidade.politics.blog/" rel="home">Política de Privacidade Livre Mercado Diamantina</a><span class="comma">,</span>
+            <a href="https://wordpress.com/?ref=footer_segment_blog" rel="nofollow">Blog no WordPress.com.</a>					</div><!-- .site-info -->
+    </footer><!-- #colophon -->
+
+</div><!-- #page -->
+
+<!--  -->
+<div id="wpadminbar" class="marketing-bar"><div class="marketing-bar-text">Crie um novo site no WordPress.com</div><a class="marketing-bar-button" href="https://br.wordpress.com/?ref=marketing_bar">Comece agora</a></div><script src='//0.gravatar.com/js/gprofiles.js?ver=202002y'></script>
+<script>
+var WPGroHo = {"my_hash":""};
+</script>
+<script type='text/javascript' src='https://s1.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1380573781h'></script>
+
+<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+
+			if (typeof Gravatar === "undefined"){
+				return;
+			}
+
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+<div style="display:none">
+</div>
+<div class="widget widget_eu_cookie_law_widget"><div
+        class="hide-on-button ads-active"
+        data-hide-timeout="30"
+        data-consent-expiration="180"
+        id="eu-cookie-law"
+>
+    <form method="post">
+        <input type="submit" value="Fechar e aceitar" class="accept" />
+
+        Privacidade e cookies: Esse site utiliza cookies. Ao continuar a usar este site, você concorda com seu uso. <br />
+        Para saber mais, inclusive sobre como controlar os cookies, consulte aqui:
+        <a href="https://automattic.com/cookies" >
+            Política de cookies		</a>
+    </form>
+</div>
+</div><link rel='stylesheet' id='all-css-0-2' href='https://s2.wp.com/wp-content/plugins/gutenberg-blocks/jetpack-layout-grid/blocks/front.css?m=1576278967h&cssminify=yes' type='text/css' media='all' />
+<script>
+var comment_like_text = {"loading":"Carregando..."};
+</script>
+<script>
+var actionbardata = {"siteID":"170486792","siteName":"Pol\u00edtica de Privacidade Livre Mercado Diamantina","siteURL":"https:\/\/politicadeprivacidade.politics.blog","icon":"<img alt='' src='https:\/\/s2.wp.com\/i\/logo\/wpcom-gray-white.png' class='avatar avatar-50' height='50' width='50' \/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/maywood","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/wordpress.com\/log-in?redirect_to=https%3A%2F%2Fpoliticadeprivacidade.politics.blog%2F&signup_flow=account&domain=politicadeprivacidade.politics.blog","themeURL":"https:\/\/wordpress.com\/theme\/maywood\/","xhrURL":"https:\/\/politicadeprivacidade.politics.blog\/wp-admin\/admin-ajax.php","nonce":"5d6100357a","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"8161481365\" \/>","referer":"https:\/\/politicadeprivacidade.politics.blog\/","canFollow":"1","feedID":"102221248","statusMessage":"","customizeLink":"https:\/\/politicadeprivacidadepolitics.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Fpoliticadeprivacidadepolitics.wordpress.com%2F","postID":"6","shortlink":"https:\/\/wp.me\/PbxloY-6","canEditPost":"","editLink":"https:\/\/wordpress.com\/page\/politicadeprivacidade.politics.blog\/6","statsLink":"https:\/\/wordpress.com\/stats\/post\/6\/politicadeprivacidade.politics.blog","i18n":{"view":"Exibir site","follow":"Seguir","following":"Seguindo","edit":"Editar","login":"Fazer login","signup":"Registre-se","customize":"Personalizar","report":"Denunciar este conte\u00fado","themeInfo":"Obtenha o tema: Maywood","shortlink":"Copiar link curto","copied":"Copiado","followedText":"Novos posts deste site agora aparecer\u00e3o no seu <a href=\"https:\/\/wordpress.com\/read\">Leitor<\/a>","foldBar":"Esconder esta barra","unfoldBar":"Mostrar esta barra","editSubs":"Gerenciar assinaturas","viewReader":"Visualizar site no Leitor","viewReadPost":"Ver post no Leitor","subscribe":"Cadastre-me","enterEmail":"Insira seu endere\u00e7o de email","followers":"","alreadyUser":"J\u00e1 tem uma conta do WordPress.com? <a href=\"https:\/\/wordpress.com\/log-in?redirect_to=https%3A%2F%2Fpoliticadeprivacidade.politics.blog%2F&signup_flow=account&domain=politicadeprivacidade.politics.blog\">Fa\u00e7a login agora.<\/a>","stats":"Estat\u00edsticas"}};
+</script>
+<script type='text/javascript' src='https://s1.wp.com/_static/??-eJyVUe1uwyAMfKERr5Oqpj+mPQsBN3PC18CE7u0Halp1mVap/8yd73w2UIJQ3jE6himBxoUUhnM3pRe4o2wWweSRXAJDMyb4ypjxUzptMF6bySmTdSWbESWGBZ32sVHBm+8TGdNZclvvq/EpGyMSMQrUxOTGdSS8dru+e4PB+Ar5xEnUUs3rDMLyIK3y1lZIXFJPLf4AqVDAZ0S/gP/yj7k+B4zjJV4VIgepZoFL0yqfHWtfHKz0Bn6Qp5AekasiV9bPhMLIAow2GMm4wR/4SF3PLwYZwcrEGGsl/IIxUvu1G/akA8e65J+r3IsUk3dNdKtq94d93+0Ph+O+P/b99APLlfLR'></script>
+<script type='text/javascript'>
+( 'fetch' in window ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-fetch.min.js?m=1573572739h&#038;ver=3.0.0"></scr' + 'ipt>' );( document.contains ) || document.write( '<script src="https://s1.wp.com/wp-includes/js/dist/vendor/wp-polyfill-node-contains.min.js?m=1540208548h&#038;ver=3.26.0-0"></scr' + 'ipt>' );( window.FormData && window.FormData.prototype.keys ) || document.write( '<script src="https://s1.wp.com/wp-includes/js/dist/vendor/wp-polyfill-formdata.min.js?m=1550600082h&#038;ver=3.0.12"></scr' + 'ipt>' );( Element.prototype.matches && Element.prototype.closest ) || document.write( '<script src="https://s2.wp.com/wp-includes/js/dist/vendor/wp-polyfill-element-closest.min.js?m=1540208548h&#038;ver=2.0.2"></scr' + 'ipt>' );
+</script>
+<script>
+	/(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",function(){var t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())},!1);
+	</script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script><script src="//stats.wp.com/w.js?60" type="text/javascript" async defer></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'170486792','blog_tz':'-3','user_lang':'pt-br','blog_lang':'pt-br','user_id':'0'}]);
+_stq.push(['view', {'blog':'170486792','v':'wpcom','tz':'-3','user_id':'0','post':'6','subd':'politicadeprivacidadepolitics'}]);
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1mJVY3bm9aR3VCbS9mWm1pRyZuJS1LX1t5QmRXZzE3RC9rQWZHK1FjbDltdWdaMVFFZTcxUGVHLWR0WTJoeUFhMnktfi9zSm9nXXw5YUd6YWcrSFtJOUQwfENMMHN0clFReFpGMyZEdGwuNnx2alZiYnJWd3hXfncvWU03QjM5ZjF5VHRGeWtKYTMmXVFkMTJEST9zMUsvR2ZMbDFvZm93Wj1Jd1Yzbl14T2FqR1ByMnwtMms4a0hJVWlZS3dtRDFzVG1HdVNnck89ZmNkJnZzWCVFXV13SFMySlhpa0N6RVFbT24rYWlPLDVXVS9dQ29OYjBPRjFEMVEvdHxiTEJJ'}]);
+_stq.push([ 'clickTrackerInit', '170486792', '6' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+
+}
+</script>
+</body>
+</html>
